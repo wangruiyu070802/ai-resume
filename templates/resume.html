@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ resume.name }} - 简历</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+    padding: 40px 20px;
+  }
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 48px 56px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+
+  /* Header */
+  .header { margin-bottom: 32px; }
+  .header h1 { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+  .header .title { font-size: 16px; color: #666; margin-bottom: 8px; }
+  .header .contact { font-size: 14px; color: #888; }
+  .header .contact span { margin: 0 8px; }
+
+  /* Section */
+  .section { margin-bottom: 28px; }
+  .section-title {
+    font-size: 16px;
+    font-weight: 700;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #333;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* Summary */
+  .summary { font-size: 14px; color: #555; line-height: 1.8; }
+
+  /* Education */
+  .edu-item { margin-bottom: 16px; }
+  .edu-item:last-child { margin-bottom: 0; }
+  .edu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 4px;
+  }
+  .edu-header .school { font-weight: 600; font-size: 15px; }
+  .edu-header .period { font-size: 13px; color: #888; }
+  .edu-meta { font-size: 13px; color: #666; margin-bottom: 6px; }
+  .edu-item ul { padding-left: 18px; font-size: 14px; color: #555; }
+  .edu-item li { margin-bottom: 2px; }
+
+  /* Experience */
+  .exp-item { margin-bottom: 20px; }
+  .exp-item:last-child { margin-bottom: 0; }
+  .exp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 2px;
+  }
+  .exp-header .company { font-weight: 600; font-size: 15px; }
+  .exp-header .duration { font-size: 13px; color: #888; }
+  .exp-role { font-size: 13px; color: #666; margin-bottom: 6px; }
+  .exp-item ul { padding-left: 18px; font-size: 14px; color: #555; }
+  .exp-item li { margin-bottom: 2px; }
+
+  /* Projects */
+  .proj-item { margin-bottom: 20px; }
+  .proj-item:last-child { margin-bottom: 0; }
+  .proj-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 2px;
+  }
+  .proj-header .proj-name { font-weight: 600; font-size: 15px; }
+  .proj-tech { font-size: 13px; color: #888; margin-bottom: 6px; }
+  .proj-item ul { padding-left: 18px; font-size: 14px; color: #555; }
+  .proj-item li { margin-bottom: 2px; }
+
+  /* Skills */
+  .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; }
+  .skill-category { margin-bottom: 6px; }
+  .skill-category .cat-name { font-weight: 600; font-size: 14px; }
+  .skill-category .cat-items { font-size: 14px; color: #555; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>{{ resume.name }}</h1>
+    <div class="title">{{ resume.title }}</div>
+    <div class="contact">
+      {% for key, val in resume.contact.items() %}
+        <span>{{ val }}</span>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Summary -->
+  {% if resume.summary %}
+  <div class="section">
+    <div class="section-title">关于我</div>
+    <div class="summary">{{ resume.summary }}</div>
+  </div>
+  {% endif %}
+
+  <!-- Education -->
+  {% if resume.education %}
+  <div class="section">
+    <div class="section-title">教育</div>
+    {% for edu in resume.education %}
+    <div class="edu-item">
+      <div class="edu-header">
+        <span class="school">{{ edu.school }}</span>
+        <span class="period">{{ edu.period }}</span>
+      </div>
+      <div class="edu-meta">{{ edu.major }} · {{ edu.degree }}</div>
+      {% if edu.highlights %}
+      <ul>
+        {% for h in edu.highlights %}<li>{{ h }}</li>{% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Experience -->
+  {% if resume.experience %}
+  <div class="section">
+    <div class="section-title">经历</div>
+    {% for exp in resume.experience %}
+    <div class="exp-item">
+      <div class="exp-header">
+        <span class="company">{{ exp.company }}</span>
+        <span class="duration">{{ exp.duration }}</span>
+      </div>
+      <div class="exp-role">{{ exp.role }}</div>
+      <ul>
+        {% for d in exp.description %}<li>{{ d }}</li>{% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Projects -->
+  {% if resume.projects %}
+  <div class="section">
+    <div class="section-title">项目</div>
+    {% for proj in resume.projects %}
+    <div class="proj-item">
+      <div class="proj-header">
+        <span class="proj-name">{{ proj.name }}</span>
+      </div>
+      <div class="proj-tech">{{ proj.description }} | {{ proj.technologies | join("、") }}</div>
+      <ul>
+        {% for h in proj.highlights %}<li>{{ h }}</li>{% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Skills -->
+  {% if resume.skills %}
+  <div class="section">
+    <div class="section-title">技能</div>
+    <div class="skills-grid">
+      {% for skill in resume.skills %}
+      <div class="skill-category">
+        <div class="cat-name">{{ skill.category }}</div>
+        <div class="cat-items">{{ skill.items | join("、") }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+</body>
+</html>
